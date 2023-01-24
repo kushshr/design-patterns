@@ -23,12 +23,12 @@ func (ws WeatherStation) newStation(temperature float32) WeatherStation {
 	return ws
 }
 
-func (ws WeatherStation) add(ob IObserver) {
+func (ws *WeatherStation) add(ob IObserver) {
 	ws.observers = append(ws.observers, ob)
 	return
 }
 
-func (ws WeatherStation) remove(ob IObserver) {
+func (ws *WeatherStation) remove(ob IObserver) {
 	for i, o := range ws.observers {
 		if o == ob {
 			ws.observers = append(ws.observers[:i], ws.observers[i+1:]...)
@@ -51,7 +51,7 @@ type PhoneObserver struct {
 }
 
 func (po PhoneObserver) update() {
-	print("Updated phone observer")
+	print("Updated phone observer\n")
 }
 
 type WallObserver struct {
@@ -59,7 +59,7 @@ type WallObserver struct {
 }
 
 func (wo WallObserver) update() {
-	print("Updated wall observer")
+	print("Updated wall observer\n")
 }
 
 func main() {
@@ -69,10 +69,14 @@ func main() {
 
 	po := PhoneObserver{}
 
-	ws.add(po)
+	ws.add(&po)
 	ws.notify()
 
 	wo := WallObserver{}
-	ws.add(wo)
+	ws.add(&wo)
 	ws.notify()
+
+	ws.remove(&wo)
+	ws.notify()
+
 }
